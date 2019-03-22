@@ -28,7 +28,7 @@ bool ciEndsWith(std::basic_string_view<T> a, std::basic_string_view<T> b) {
 
 
 int printUsage(int argc, wchar_t* argv[]) {
-  std::wcerr << L"usage: "sv << (argc >= 1 ? argv[0] : L"InjectExec") << L" [/-R] [/-S] <injectee.exe> <injectant.dll> [...arguments for intectee.exe]"sv << std::endl;
+  std::wcerr << L"usage: "sv << (argc >= 1 ? argv[0] : L"InjectExec") << L" [/-R] [/-S] <injectee.exe> <injectant.dll> [...arguments for injectee.exe]"sv << std::endl;
   return 1;
 }
 
