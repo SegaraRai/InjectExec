@@ -4,7 +4,7 @@ A simple CLI tool for Windows to start a process with a DLL injected.
 ## Usage
 
 ```
-InjectExec[32/64].exe [/-R] [/-S] <injectee.exe> <injectant.dll> [...arguments for injectee.exe]
+InjectExec[32/64].exe [/-R] [/-S] [/-W] <injectee.exe> <injectant.dll> [...arguments for injectee.exe]
 ```
 
 ### Options
@@ -18,3 +18,8 @@ InjectExec[32/64].exe [/-R] [/-S] <injectee.exe> <injectant.dll> [...arguments f
 
   Disable suspending the main thread of the target process during injection.  
   (The main thread of the target process will be suspended during injection by default.)
+
+#### /-W
+
+  Disable waiting for the target process to finish.  
+  (InjectExec waits for the target process to finish by default.)

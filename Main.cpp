@@ -28,7 +28,7 @@ bool ciEndsWith(std::basic_string_view<T> a, std::basic_string_view<T> b) {
 
 
 int printUsage(int argc, wchar_t* argv[]) {
-  std::wcerr << L"usage: "sv << (argc >= 1 ? argv[0] : L"InjectExec") << L" [/-R] [/-S] <injectee.exe> <injectant.dll> [...arguments for injectee.exe]"sv << std::endl;
+  std::wcerr << L"usage: "sv << (argc >= 1 ? argv[0] : L"InjectExec") << L" [/-R] [/-S] [/-W] <injectee.exe> <injectant.dll> [...arguments for injectee.exe]"sv << std::endl;
   return 1;
 }
 
@@ -40,6 +40,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
   bool suspendThread = true;
   bool resolveDllPath = true;
+  bool waitProcess = true;
   std::array<std::wstring, 2> paths;
   size_t pathCount = 0;
   std::optional<int> exeArgBeginIndex;
@@ -55,6 +56,10 @@ int wmain(int argc, wchar_t* argv[]) {
 
         case L'S':
           suspendThread = on;
+          break;
+
+        case L'W':
+          waitProcess = on;
           break;
 
         case L'?':
@@ -185,13 +190,15 @@ int wmain(int argc, wchar_t* argv[]) {
     }
   }
 
-  WaitForSingleObject(processInformation.hProcess, INFINITE);
+  if (waitProcess) {
+    WaitForSingleObject(processInformation.hProcess, INFINITE);
 
-  DWORD exitCode;
-  if (!GetExitCodeProcess(processInformation.hProcess, &exitCode)) {
-    std::wcout << L"process exited with code "sv << exitCode << std::endl;
-  } else {
-    std::wcout << L"process exited"sv;
+    DWORD exitCode;
+    if (!GetExitCodeProcess(processInformation.hProcess, &exitCode)) {
+      std::wcout << L"process exited with code "sv << exitCode << std::endl;
+    } else {
+      std::wcout << L"process exited"sv;
+    }
   }
 
   CloseHandle(processInformation.hThread);
