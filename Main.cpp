@@ -51,14 +51,17 @@ int wmain(int argc, wchar_t* argv[]) {
       const wchar_t mode = on ? argv[i][1] : argv[i][2];
       switch (mode) {
         case L'R':
+        case L'r':
           resolveDllPath = on;
           break;
 
         case L'S':
+        case L's':
           suspendThread = on;
           break;
 
         case L'W':
+        case L'w':
           waitProcess = on;
           break;
 
