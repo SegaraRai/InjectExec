@@ -129,7 +129,7 @@ int wmain(int argc, wchar_t* argv[]) {
     return 1;
   }
 
-  FARPROC pfLoadLibraryW = GetProcAddress(hmKernel32, u8"LoadLibraryW");
+  FARPROC pfLoadLibraryW = GetProcAddress(hmKernel32, "LoadLibraryW");
   if (!pfLoadLibraryW) {
     std::wcerr << L"GetProcAddress failed (GetLastError = "sv << GetLastError() << L")"sv << std::endl;
     return 1;
@@ -138,7 +138,7 @@ int wmain(int argc, wchar_t* argv[]) {
   std::wstring exeArgs = L"\""s + exePath + L"\""s;
   if (exeArgBeginIndex) {
     for (int i = exeArgBeginIndex.value(); i < argc; i++) {
-      exeArgs += L" \""s + std::regex_replace(argv[i], std::wregex(L"[\"\\]"), L"\\\\$&") + L"\""s;
+      exeArgs += L" \""s + std::regex_replace(argv[i], std::wregex(L"\""), L"\\$&") + L"\""s;
     }
   }
   auto exeArgsBuffer = std::make_unique<wchar_t[]>(exeArgs.size() + 1);
@@ -147,6 +147,7 @@ int wmain(int argc, wchar_t* argv[]) {
   const DWORD creationFlags = suspendThread ? CREATE_SUSPENDED : 0;
   STARTUPINFOW startupInfo{sizeof(startupInfo)};
   PROCESS_INFORMATION processInformation{};
+  //std::wcout << exeArgsBuffer.get() << std::endl;
   if (!CreateProcessW(NULL, exeArgsBuffer.get(), NULL, NULL, FALSE, creationFlags, NULL, NULL, &startupInfo, &processInformation)) {
     std::wcerr << L"CreateProcessW failed (GetLastError = "sv << GetLastError() << L")"sv << std::endl;
     return 1;
